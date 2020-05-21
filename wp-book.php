@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -57,12 +56,64 @@ function deactivate_wp_book() {
 
 if ( ! function_exists( 'wpbook_setup_post_type' ) ) {
 	/**
-	 * Register the "book" custom post type
-	 */
+	* Register the "book" custom post type
+	*/
 	function wpbook_setup_post_type() {
-		register_post_type( 'book', array( 'public' => true ) );
+		register_post_type( 'book',
+			array(
+				'labels'      => array(
+					'name'          => __( 'Books' ),
+					'singular_name' => __( 'Book' ),
+				),
+				'public'      => true,
+				'has_archive' => true,
+				'rewrite'     => array( 'slug' => 'Books' ),
+			)
+		);
 	}
 	add_action( 'init', 'wpbook_setup_post_type' );
+}
+
+// hook into the init action and call create_book_taxonomies when it fires.
+add_action( 'init', 'book_categories_hierarchical_taxonomy', 0 );
+
+/**
+ * Create a custom taxonomy name it topics for your posts.
+ */
+function book_categories_hierarchical_taxonomy() {
+
+	// Add new taxonomy, make it hierarchical like categories.
+	// first do the translations part for GUI.
+
+	$labels = array(
+		'name'              => _x( 'Book Categories', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Book Category', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Book Categories' ),
+		'all_items'         => __( 'All Book Categories' ),
+		'parent_item'       => __( 'Parent Book Category' ),
+		'parent_item_colon' => __( 'Parent Book Category:' ),
+		'edit_item'         => __( 'Edit Book Category' ),
+		'update_item'       => __( 'Update Book Category' ),
+		'add_new_item'      => __( 'Add New Book Category' ),
+		'new_item_name'     => __( 'New Book Category Name' ),
+		'menu_name'         => __( 'Book Category' ),
+	);
+
+	// Now register the taxonomy.
+
+	register_taxonomy(
+		'Book Categories',
+		array( 'book' ),
+		array(
+			'hierarchical'      => true,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'book' ),
+		)
+	);
+
 }
 
 register_activation_hook( __FILE__, 'activate_wp_book' );
