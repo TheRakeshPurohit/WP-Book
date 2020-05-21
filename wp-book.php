@@ -56,10 +56,11 @@ function deactivate_wp_book() {
 
 if ( ! function_exists( 'wpbook_setup_post_type' ) ) {
 	/**
-	* Register the "book" custom post type
+	* Register the book custom post type.
 	*/
 	function wpbook_setup_post_type() {
-		register_post_type( 'book',
+		register_post_type(
+			'book',
 			array(
 				'labels'      => array(
 					'name'          => __( 'Books' ),
@@ -74,8 +75,11 @@ if ( ! function_exists( 'wpbook_setup_post_type' ) ) {
 	add_action( 'init', 'wpbook_setup_post_type' );
 }
 
-// hook into the init action and call create_book_taxonomies when it fires.
+// hook into the init action and call create_book_category_taxonomies when it fires.
 add_action( 'init', 'book_categories_hierarchical_taxonomy', 0 );
+
+// hook into the init action and call create_book_category_taxonomies when it fires.
+add_action( 'init', 'book_tags_nonhierarchical_taxonomy', 0 );
 
 /**
  * Create a custom taxonomy name it topics for your posts.
@@ -106,6 +110,45 @@ function book_categories_hierarchical_taxonomy() {
 		array( 'book' ),
 		array(
 			'hierarchical'      => true,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'book' ),
+		)
+	);
+
+}
+
+/**
+ * Create a custom taxonomy name it book tags for your books.
+ */
+function book_tags_nonhierarchical_taxonomy() {
+
+	// Add new taxonomy, make it non hierarchical like tags.
+	// first do the translations part for GUI.
+
+	$labels = array(
+		'name'              => _x( 'Book Tags', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Book Tag', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Book Tags' ),
+		'all_items'         => __( 'All Book Tags' ),
+		'parent_item'       => __( 'Parent Book Tag' ),
+		'parent_item_colon' => __( 'Parent Book Tag:' ),
+		'edit_item'         => __( 'Edit Book Tag' ),
+		'update_item'       => __( 'Update Book Tag' ),
+		'add_new_item'      => __( 'Add New Book Tag' ),
+		'new_item_name'     => __( 'New Book Tag Name' ),
+		'menu_name'         => __( 'Book Tag' ),
+	);
+
+	// Now register the taxonomy.
+
+	register_taxonomy(
+		'Book Tags',
+		array( 'book' ),
+		array(
+			'hierarchical'      => false,
 			'labels'            => $labels,
 			'show_ui'           => true,
 			'show_admin_column' => true,
