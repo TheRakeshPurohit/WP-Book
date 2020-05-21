@@ -55,6 +55,16 @@ function deactivate_wp_book() {
 	Wp_Book_Deactivator::deactivate();
 }
 
+if ( ! function_exists( 'wpbook_setup_post_type' ) ) {
+	/**
+	 * Register the "book" custom post type
+	 */
+	function wpbook_setup_post_type() {
+		register_post_type( 'book', array( 'public' => true ) );
+	}
+	add_action( 'init', 'wpbook_setup_post_type' );
+}
+
 register_activation_hook( __FILE__, 'activate_wp_book' );
 register_deactivation_hook( __FILE__, 'deactivate_wp_book' );
 
