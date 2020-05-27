@@ -164,18 +164,18 @@ function book_tags_nonhierarchical_taxonomy() {
  *
  * @return void
  */
-function wporg_add_custom_box() {
-	$screens = array( 'post', 'wporg_cpt' );
+function wpbook_add_custom_box() {
+	$screens = array( 'post', 'book' );
 	foreach ( $screens as $screen ) {
 			add_meta_box(
-				'wporg_box_id',           // Unique ID.
-				'Custom Meta Box Title',  // Box title.
-				'wporg_custom_box_html',  // Content callback, must be of type callable.
+				'wpbook_details',           // Unique ID.
+				'Book Details: ',  // Box title.
+				'wpbook_custom_box_html',  // Content callback, must be of type callable.
 				$screen                   // Post type.
 			);
 	}
 }
-add_action( 'add_meta_boxes', 'wporg_add_custom_box' );
+add_action( 'add_meta_boxes', 'wpbook_add_custom_box' );
 
 /**
  * Custom meta box type.
@@ -183,15 +183,21 @@ add_action( 'add_meta_boxes', 'wporg_add_custom_box' );
  * @param [type] $post
  * @return void
  */
-function wporg_custom_box_html( $post ) {
-	$value = get_post_meta( $post->ID, '_wporg_meta_key', true );
+function wpbook_custom_box_html( $post ) {
+	$value = get_post_meta( $post->ID, '_wpbook_meta_key', true );
 	?>
-	<label for="wporg_field">Description for this field</label>
-	<select name="wporg_field" id="wporg_field" class="postbox">
-	<option value="">Select something...</option>
-	<option value="something" <?php selected( $value, 'something' ); ?>>Something</option>
-	<option value="else" <?php selected( $value, 'else' ); ?>>Else</option>
-	</select>
+	<label for="wpbook_author"> Author : </label>
+	<Input name="wpbook_author" id="wpbook_author" class="postbox" /> <br />
+	<label for="wpbook_price"> Price : </label>
+	<Input name="wpbook_price" id="wpbook_price" class="postbox" /> <br />
+	<label for="wpbook_publisher"> Publisher : </label>
+	<Input name="wpbook_publisher" id="wpbook_publisher" class="postbox" /> <br />
+	<label for="wpbook_year"> Year	: </label>
+	<Input name="wpbook_year" id="wpbook_year" class="postbox" /> <br />
+	<label for="wpbook_edition"> Edition : </label>
+	<Input name="wpbook_edition" id="wpbook_edition" class="postbox" /> <br />
+	<label for="wpbook_url"> URL : </label>
+	<Input name="wpbook_url" id="wpbook_url" class="postbox" /> <br />
 	<?php
 }
 
@@ -201,16 +207,16 @@ function wporg_custom_box_html( $post ) {
  * @param [type] $post_id
  * @return void
  */
-function wporg_save_postdata( $post_id ) {
-	if ( array_key_exists( 'wporg_field', $_POST ) ) {
+function wpbook_save_postdata( $post_id ) {
+	if ( array_key_exists( 'wpbook_publisher', $_POST ) ) {
 		update_post_meta(
 			$post_id,
-			'_wporg_meta_key',
-			$_POST['wporg_field']
+			'_wpbook_meta_key',
+			wp_unslash( $_POST['wpbook_publisher'] ),
 		);
 	}
 }
-add_action( 'save_post', 'wporg_save_postdata' );
+add_action( 'save_post', 'wpbook_save_postdata' );
 
 
 register_activation_hook( __FILE__, 'activate_wp_book' );
