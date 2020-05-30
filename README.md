@@ -1,4 +1,6 @@
-=== WP Book ===
+**Under Development**
+
+=== *WP Book* ===
 Contributors: (this should be a list of wordpress.org userid's)
 Donate link: therakeshpurohit.wordpress.com
 Tags: comments, spam
@@ -44,8 +46,8 @@ This section describes how to install the plugin and get it working.
 e.g.
 
 1. Upload `wp-book.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
 
 == Frequently Asked Questions ==
 
